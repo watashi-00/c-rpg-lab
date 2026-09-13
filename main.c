@@ -8,7 +8,7 @@ typedef struct Entity {
 
 typedef struct Player {
     char *name;
-    Entity *entity;
+    Entity *base;
 
 } Player;
 
@@ -22,7 +22,7 @@ Player *createPlayer(char *name) {
 
     *player = (Player) {
         .name = name,
-        .entity = NULL,
+        .base = NULL,
     };
 
     return player;
