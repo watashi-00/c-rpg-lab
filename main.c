@@ -15,24 +15,16 @@ struct Entity {
 
 typedef struct Player {
     char *name;
-    Entity *base;
+    Entity base;
 
 } Player;
 
-Entity *createEntity(int life, int damage) {
-    Entity *entity = malloc(sizeof(Entity));
-
-    if (!entity) {
-        return NULL;
-    }
-
-    *entity = (Entity) {
+Entity createEntity(int life, int damage) {
+    return (Entity) {
         .life = life,
         .damage = damage,
         .hit_fn = hit,
     };
-
-    return entity;
 }
 
 Player *createPlayer(char *name) {
@@ -52,10 +44,11 @@ Player *createPlayer(char *name) {
 int main(void) {
 
     Player *pP = createPlayer("player");
-    Player player = *pP;
+    Player player   = *pP;
+    Player player2  = *pP;
     free(pP);
 
-    player.base->hit_fn(player.base, player.base);
+    player.base.hit_fn(&player.base, &player2.base);
 
     return 0;
 }
