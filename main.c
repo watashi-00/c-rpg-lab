@@ -1,10 +1,15 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-typedef struct Entity {
+typedef struct Entity Entity;
+
+struct Entity {
     int life;
     int damage;
-} Entity;
+
+    void (*hit_fn)(Entity *this, Entity *other);
+
+};
 
 typedef struct Player {
     char *name;
@@ -23,6 +28,8 @@ Entity *createEntity(int life, int damage) {
         .life = life,
         .damage = damage
     };
+
+    return entity;
 }
 
 Player *createPlayer(char *name) {
