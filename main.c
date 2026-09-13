@@ -12,6 +12,18 @@ typedef struct Player {
 
 } Player;
 
+Entity *createEntity(int life, int damage) {
+    Entity *entity = malloc(sizeof(Entity));
+
+    if (!entity) {
+        return NULL;
+    }
+
+    *entity = (Entity) {
+        .life = life,
+        .damage = damage
+    };
+}
 
 Player *createPlayer(char *name) {
     Player *player = malloc(sizeof(Player));
@@ -22,7 +34,7 @@ Player *createPlayer(char *name) {
 
     *player = (Player) {
         .name = name,
-        .base = NULL,
+        .base = createEntity(100, 20),
     };
 
     return player;
