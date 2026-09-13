@@ -28,7 +28,8 @@ Entity *createEntity(int life, int damage) {
 
     *entity = (Entity) {
         .life = life,
-        .damage = damage
+        .damage = damage,
+        .hit_fn = hit,
     };
 
     return entity;
@@ -49,11 +50,21 @@ Player *createPlayer(char *name) {
     return player;
 }
 int main(void) {
-    printf("Hello, World!\n");
+
+    Player *pP = createPlayer("player");
+    Player player = *pP;
+    free(pP);
+
+    player.base->hit_fn(player.base, player.base);
+
     return 0;
 }
 
 
 void hit(Entity *this, Entity *other) {
+    printf("Other Life : %d\n", other->life);
+    printf("This Life : %d\n", this->life);
     other->life -= this->damage;
+    printf("Other Life : %d\n", other->life);
+    printf("This Life : %d\n", this->life);
 }
