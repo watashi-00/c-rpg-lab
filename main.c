@@ -9,6 +9,7 @@ void heal(Entity *this, int quantity);
 struct Entity {
     int life;
     int damage;
+    int maxHealth;
 
     void (*hit_fn)(Entity *this, Entity *other);
     void (*heal_fn)(Entity *this, int quantity);
@@ -29,7 +30,9 @@ Entity createEntity(int life, int damage) {
     return (Entity) {
         .life = life,
         .damage = damage,
+        .maxHealth = life,
         .hit_fn = hit,
+        .heal_fn = heal
     };
 }
 
@@ -69,20 +72,26 @@ int main(void) {
     free(eP);
     free(pP);
 
-    player.base.hit_fn(&player.base, &player2.base);
+    player. base.hit_fn(&player.base, &enemy.base);
+    enemy.  base.hit_fn(&enemy.base, &player.base);
+
+    enemy.  base.heal_fn(&enemy.base, 10);
+    player. base.heal_fn(&player.base, 5);
 
     return 0;
 }
 
 
 void heal(Entity *this, int quantity) {
-    if (this->life >= 100) {
+    if (this->life >= this->maxHealth) {
         return;
     }
 
-    this->life = this->life + quantity <= 100
+    this->life = this->life + quantity <= this->maxHealth
         ? this->life + quantity
-        : 100;
+        : this->maxHealth;
+
+    printf("Life : %d\n", this->life);
 
 };
 
