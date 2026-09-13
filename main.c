@@ -3,6 +3,8 @@
 
 typedef struct Entity Entity;
 
+void hit(Entity *this, Entity *other);
+
 struct Entity {
     int life;
     int damage;
@@ -49,4 +51,9 @@ Player *createPlayer(char *name) {
 int main(void) {
     printf("Hello, World!\n");
     return 0;
+}
+
+
+void hit(Entity *this, Entity *other) {
+    other->life -= this->damage;
 }
