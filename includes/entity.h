@@ -1,9 +1,6 @@
 #ifndef GAME_ENTITY_H
 #define GAME_ENTITY_H
 
-#include <stdio.h>
-#include <stdlib.h>
-
 #define ENTITY_FIELDS(X) \
     X(health, int)       \
     X(maxHealth, int)    \
