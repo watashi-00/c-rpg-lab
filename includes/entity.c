@@ -5,19 +5,13 @@
 #include "entity.h"
 
 #include <stdio.h>
+#include <stdlib.h>
 
 void hit(Entity *this, Entity *other);
 void heal(Entity *this, int quantity);
 
-Entity createEntity(int life, int damage) {
-    return (Entity) {
-        .health = life,
-        .damage = damage,
-        .maxHealth = life,
-        .hit_fn = hit,
-        .heal_fn = heal
-    };
-}
+Enemy   *createEnemy(char *name, int damage, int life);
+Player  *createPlayer(char *name);
 
 void heal(Entity *this, int quantity) {
     if (this->health >= this->maxHealth) {
@@ -40,3 +34,45 @@ void hit(Entity *this, Entity *other) {
     printf("This Life : %d\n", this->health);
 }
 
+Entity createEntity(int life, int damage) {
+    return (Entity) {
+        .health = life,
+        .damage = damage,
+        .maxHealth = life,
+        .hit_fn = hit,
+        .heal_fn = heal
+    };
+}
+
+Player *createPlayer(char *name) {
+    Player *player = malloc(sizeof(Player));
+
+    if (!player) {
+        return NULL;
+    }
+
+    player->base = createEntity(100, 20);
+
+    for (int i = 0; i < 7 && name[i] != '\0'; i++) {
+        player->name[i] = name[i];
+    }
+
+    player->name[7] = '\0';
+
+    return player;
+}
+
+Enemy *createEnemy(char *name, int damage, int life) {
+    Enemy *enemy = malloc(sizeof(Enemy));
+
+    if (!enemy) {
+        return NULL;
+    }
+
+    *enemy = (Enemy) {
+        .name = name,
+        .base = createEntity(life, damage),
+    };
+
+    return enemy;
+}

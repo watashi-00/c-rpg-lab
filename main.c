@@ -5,53 +5,6 @@
 #include "includes/entity.h"
 
 
-
-typedef struct Player {
-    Entity base;
-    char name[8];
-
-} Player;
-
-typedef struct Enemy {
-    Entity base;
-    char *name;
-} Enemy;
-
-
-
-Player *createPlayer(char *name) {
-    Player *player = malloc(sizeof(Player));
-
-    if (!player) {
-        return NULL;
-    }
-
-    player->base = createEntity(100, 20);
-
-    for (int i = 0; i < 7 && name[i] != '\0'; i++) {
-        player->name[i] = name[i];
-    }
-
-    player->name[7] = '\0';
-
-    return player;
-}
-
-Enemy *createEnemy(char *name, int damage, int life) {
-    Enemy *enemy = malloc(sizeof(Enemy));
-
-    if (!enemy) {
-        return NULL;
-    }
-
-    *enemy = (Enemy) {
-        .name = name,
-        .base = createEntity(life, damage),
-    };
-
-    return enemy;
-
-}
 int main(void) {
 
     Player *pP      = createPlayer("player");

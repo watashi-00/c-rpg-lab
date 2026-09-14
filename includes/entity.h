@@ -26,8 +26,15 @@ struct Entity {
 };
 
 struct Player {
-  Entity entity;
+  Entity base;
+  char name[8];
 };
+
+struct Enemy {
+  Entity base;
+  char *name;
+};
+
 
 extern Entity createEntity(int life, int damage);
 
