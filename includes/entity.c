@@ -10,9 +10,6 @@
 void hit(Entity *this, Entity *other);
 void heal(Entity *this, int quantity);
 
-Enemy   *createEnemy(char *name, int damage, int life);
-Player  *createPlayer(char *name);
-
 void heal(Entity *this, int quantity) {
     if (this->health >= this->maxHealth) {
         return;

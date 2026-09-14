@@ -35,7 +35,8 @@ struct Enemy {
   char *name;
 };
 
-
-extern Entity createEntity(int life, int damage);
+Enemy   *createEnemy(char *name, int damage, int life);
+Player  *createPlayer(char *name);
+Entity createEntity(int life, int damage);
 
 #endif //GAME_ENTITY_H
