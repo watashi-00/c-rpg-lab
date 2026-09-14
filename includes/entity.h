@@ -20,14 +20,15 @@ struct Entity {
   int damage;
   int maxHealth;
   EntityType type;
+
+  void (*hit_fn)(Entity *this, Entity *other);
+  void (*heal_fn)(Entity *this, int quantity);
 };
 
 struct Player {
   Entity entity;
 };
 
-Entity *createEntity(int life, int damage);
-
-
+extern Entity createEntity(int life, int damage);
 
 #endif //GAME_ENTITY_H

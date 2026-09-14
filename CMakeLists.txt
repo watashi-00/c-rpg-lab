@@ -4,4 +4,5 @@ project(game C)
 set(CMAKE_C_STANDARD 17)
 
 add_executable(game main.c
-        includes/entity.h)
+        includes/entity.h
+        includes/entity.c)
