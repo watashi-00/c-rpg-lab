@@ -1,0 +1,12 @@
+# Build directories
+cmake-build-debug/
+build/
+
+# IDE settings
+.idea/
+.vscode/
+
+# Executables and compiled objects
+*.o
+*.out
+game
