@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 
 typedef struct Entity Entity;
 
@@ -17,7 +18,7 @@ struct Entity {
 
 typedef struct Player {
     Entity base;
-    char *name;
+    char name[8];
 
 } Player;
 
@@ -43,16 +44,23 @@ Player *createPlayer(char *name) {
         return NULL;
     }
 
-    *player = (Player) {
-        .name = name,
-        .base = createEntity(100, 20),
-    };
+    player->base = createEntity(100, 20);
+
+    for (int i = 0; i < 7 && name[i] != '\0'; i++) {
+        player->name[i] = name[i];
+    }
+
+    player->name[7] = '\0';
 
     return player;
 }
 
 Enemy *createEnemy(char *name, int damage, int life) {
     Enemy *enemy = malloc(sizeof(Enemy));
+
+    if (!enemy) {
+        return NULL;
+    }
 
     *enemy = (Enemy) {
         .name = name,
