@@ -168,14 +168,14 @@ static size_t hash_string(const char *str) {
 }
 
 static void function_insert(EntryHash *entry) {
-    size_t index = hash_string(entry->name) % HASH_CAPACITY;
+    size_t index = hash_string(entry->name) & HASH_CAPACITY - 1;
 
     entry->next = functions[index];
     functions[index] = entry;
 }
 
 static EntryHash *function_get(const char *name) {
-    size_t index = hash_string(name) % HASH_CAPACITY;
+    size_t index = hash_string(name) & HASH_CAPACITY - 1;
 
     EntryHash *entry = functions[index];
 
