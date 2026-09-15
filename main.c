@@ -18,15 +18,18 @@ void changeName() {
 
     if (player_defined) {
         char temp_name[8];
-        strcpy(temp_name, rPlayer.name);
 
+        strcpy(temp_name, rPlayer.name);
         strcpy(rPlayer.name, player_name);
+
         printf("Changed player name: %s -> %s\n", temp_name, player_name);
+
         return;
     }
 
     Player *pPlayer = createPlayer(player_name);
     rPlayer = *pPlayer;
+
     free(pPlayer);
     player_defined = true;
 
