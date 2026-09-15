@@ -3,12 +3,27 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+typedef enum EntityAction {
+    HIT_FN,
+    HEAL_FN
+} EntityAction;
+
+#ifdef DEBUG
+#define DEBUG_PRINT(...) \
+    do { printf(__VA_ARGS__); } while (0)
+#else
+#define DEBUG_PRINT(...) \
+    do {} while (0)
+#endif
+
 static void entity_hit(Entity *self, Entity *other) {
-    printf("Other Life : %d\n", other->health);
-    printf("This Life : %d\n", self->health);
+    DEBUG_PRINT("Other Life : %d\n", other->health);
+    DEBUG_PRINT("This Life : %d\n", self->health);
+
     other->health -= self->damage;
-    printf("Other Life : %d\n", other->health);
-    printf("This Life : %d\n", self->health);
+
+    DEBUG_PRINT("Other Life : %d\n", other->health);
+    DEBUG_PRINT("This Life : %d\n", self->health);
 }
 
 static void entity_heal(Entity *self, int quantity) {
@@ -20,7 +35,7 @@ static void entity_heal(Entity *self, int quantity) {
         ? self->health + quantity
         : self->maxHealth;
 
-    printf("Life : %d\n", self->health);
+    DEBUG_PRINT("Life : %d\n", self->health);
 }
 
 #define X(field, type)                                                       \
