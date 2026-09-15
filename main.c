@@ -11,19 +11,13 @@
     #include <unistd.h>
 #endif
 
-static void cls(int delay) {
-    #if defined(_WIN32) || defined(_WIN64)
-        Sleep(delay * 1000);
-        system("cls");
-    #else
-        sleep(delay);
-        system("clear");
-    #endif
-}
-
 static Player rPlayer;
+static Enemy *gEnemy;
+
+static void **functions;
+
 static bool player_defined;
-const static Enemy *gEnemy;
+static bool menu_defined;
 
 static void changeName() {
     char player_name[8];
@@ -52,12 +46,43 @@ static void changeName() {
 
 }
 
+static void cls(int delay) {
+#if defined(_WIN32) || defined(_WIN64)
+    Sleep(delay * 1000);
+    system("cls");
+#else
+    sleep(delay);
+    system("clear");
+#endif
+}
+
+void config() {
+    if (menu_defined) {
+        return;
+    }
+
+    functions = calloc(8, 8);
+    functions[0] = &changeName;
+
+    menu_defined = true;
+}
+void menu() {
+
+    config();
+
+    for (int i = 0; i < 8; i++) {
+        if (functions[i] != NULL) {
+            printf("%p\n", &functions[i]);
+        }
+    }
+}
+
 int main(void) {
 
-    while (true) { // core loop
-        changeName();
-        cls(0);
 
+    while (true) { // core loop
+        menu();
+        cls(5);
     }
     return 0;
 }
