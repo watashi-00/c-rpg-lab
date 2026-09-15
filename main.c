@@ -13,12 +13,16 @@ int main(void) {
     while (true) { // core loop
 
         if (!player_defined) {
-            printf("Enter player name: ");
             char player_name[8];
+
+            printf("Enter player name: ");
             scanf("%s", player_name);
+
             Player *pPlayer = createPlayer(player_name);
             rPlayer = *pPlayer;
+
             printf("Player name: %s\n", rPlayer.name);
+
             free(pPlayer);
             player_defined = true;
         }
