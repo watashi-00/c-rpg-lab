@@ -23,31 +23,63 @@ enum TypeKind {
 };
 
 struct Type {
-    TypeKind kind;
-    size_t size;
+    TypeKind    kind;
+    size_t      size;
     const char *name;
 };
 
 struct EntryHash {
-    const char *name;
-    void *function;
+    const char  *name;
+    void        *function;
 
-    size_t argument_count;
-    Type *arguments;
+    size_t      argument_count;
+    Type        *arguments;
 
-    Type return_type;
+    Type        return_type;
 
-    EntryHash *next;
+    EntryHash   *next;
 };
 
-
-static Player rPlayer;
-static Enemy *gEnemy;
+static Player   rPlayer;
+static Enemy    *gEnemy;
 
 static EntryHash **functions;
 
 static bool player_defined;
 static bool menu_defined;
+
+#define TYPE_DEFINE(var, type_kind, c_type) \
+    Type var = {                            \
+        .kind = type_kind,                  \
+        .size = sizeof(c_type),             \
+        .name = #c_type                     \
+    }
+
+#define FUNCTION_REGISTER_VOID(index, fn, ret_type) \
+    static EntryHash fn##_entry = {                 \
+        .name = #fn,                                \
+        .function = fn,                             \
+        .argument_count = 0,                        \
+        .arguments = NULL,                          \
+        .return_type = ret_type,                    \
+        .next = NULL                                \
+    };                                              \
+    functions[index] = &fn##_entry
+
+#define FUNCTION_REGISTER(index, fn, ret_type, ...)                \
+    static Type fn##_args[] = { __VA_ARGS__ };                     \
+    static EntryHash fn##_entry = {                                \
+        .name = #fn,                                               \
+        .function = fn,                                            \
+        .argument_count = sizeof(fn##_args) / sizeof(fn##_args[0]),\
+        .arguments = fn##_args,                                    \
+        .return_type = ret_type,                                   \
+        .next = NULL                                               \
+    };                                                             \
+    functions[index] = &fn##_entry
+
+
+TYPE_DEFINE(TYPE_VOID_T,  TYPE_VOID,  void);
 
 static void changeName() {
     char player_name[8];
@@ -77,43 +109,42 @@ static void changeName() {
 }
 
 static void cls(int delay) {
-#if defined(_WIN32) || defined(_WIN64)
-    Sleep(delay * 1000);
-    system("cls");
-#else
-    sleep(delay);
-    system("clear");
-#endif
+    #if defined(_WIN32) || defined(_WIN64)
+        Sleep(delay * 1000);
+        system("cls");
+    #else
+        sleep(delay);
+        system("clear");
+    #endif
 }
-
 
 static void config() {
     if (menu_defined) {
         return;
     }
 
-    functions = calloc(8, sizeof(EntryHash));
-    functions[0] = &(EntryHash) {
-        .name = "changeName",
-        .function = changeName,
-        .next = NULL,
-    };
+    functions = calloc(8, sizeof(EntryHash *));
+
+    FUNCTION_REGISTER_VOID(
+        0,
+        changeName,
+        TYPE_VOID);
 
     menu_defined = true;
 }
+
 static void menu() {
 
     config();
 
     for (int i = 0; i < 8; i++) {
         if (functions[i] != NULL) {
-            printf("%s\n", &functions[i]->name);
+            printf("%s\n", functions[i]->name);
         }
     }
 }
 
 int main(void) {
-
 
     while (true) { // core loop
         menu();
