@@ -3,11 +3,6 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-typedef enum EntityAction {
-    HIT_FN,
-    HEAL_FN
-} EntityAction;
-
 #ifdef DEBUG
 #define DEBUG_PRINT(...) \
     do { printf(__VA_ARGS__); } while (0)
