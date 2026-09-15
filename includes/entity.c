@@ -12,25 +12,29 @@
 #endif
 
 static void entity_hit(Entity *self, Entity *other) {
-    DEBUG_PRINT("Other Life : %d\n", other->health);
-    DEBUG_PRINT("This Life : %d\n", self->health);
+    DEBUG_PRINT("[HIT] Self health: %d\n", self->health);
+    DEBUG_PRINT("[HIT] Other health: %d\n", other->health);
+    DEBUG_PRINT("[HIT] Damage: %d\n", self->damage);
 
     other->health -= self->damage;
 
-    DEBUG_PRINT("Other Life : %d\n", other->health);
-    DEBUG_PRINT("This Life : %d\n", self->health);
+    DEBUG_PRINT("[HIT] Other health after: %d\n", other->health);
 }
 
 static void entity_heal(Entity *self, int quantity) {
     if (self->health >= self->maxHealth) {
+        DEBUG_PRINT("[HEAL] Already at max health: %d\n", self->health);
         return;
     }
+
+    DEBUG_PRINT("[HEAL] Health before: %d\n", self->health);
+    DEBUG_PRINT("[HEAL] Quantity: %d\n", quantity);
 
     self->health = self->health + quantity <= self->maxHealth
         ? self->health + quantity
         : self->maxHealth;
 
-    DEBUG_PRINT("Life : %d\n", self->health);
+    DEBUG_PRINT("[HEAL] Health after: %d\n", self->health);
 }
 
 #define X(field, type)                                                       \
