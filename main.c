@@ -5,12 +5,27 @@
 
 #include "includes/entity.h"
 
+#if defined(_WIN32) || defined(_WIN64)
+    #include <windows.h>
+#else
+    #include <unistd.h>
+#endif
+
+static void cls(int delay) {
+    #if defined(_WIN32) || defined(_WIN64)
+        Sleep(delay * 1000);
+        system("cls");
+    #else
+        sleep(delay);
+        system("clear");
+    #endif
+}
 
 static Player rPlayer;
 static bool player_defined;
 const static Enemy *gEnemy;
 
-void changeName() {
+static void changeName() {
     char player_name[8];
 
     printf("Enter player name: ");
@@ -41,6 +56,7 @@ int main(void) {
 
     while (true) { // core loop
         changeName();
+        cls(0);
 
     }
     return 0;
