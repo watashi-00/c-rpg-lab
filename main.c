@@ -1,9 +1,29 @@
+#include <stdbool.h>
 #include <stdio.h>
 #include <stdlib.h>
 
 #include "includes/entity.h"
 
+
+static Player rPlayer;
+static bool player_defined;
+
 int main(void) {
+
+    while (true) { // core loop
+
+        if (!player_defined) {
+            printf("Enter player name: ");
+            char player_name[8];
+            scanf("%s", player_name);
+            Player *pPlayer = createPlayer(player_name);
+            rPlayer = *pPlayer;
+            printf("Player name: %s\n", rPlayer.name);
+            free(pPlayer);
+            player_defined = true;
+        }
+
+    }
     Player *pP      = createPlayer("player");
     Player player   = *pP;
     Enemy *eP       = createEnemy("enemy", 10, 200);
