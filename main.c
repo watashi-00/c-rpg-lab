@@ -11,9 +11,9 @@
     #include <unistd.h>
 #endif
 
-typedef struct EntryHash EntryHash;
-typedef struct Type Type;
-typedef enum TypeKind TypeKind;
+typedef struct  EntryHash   EntryHash;
+typedef struct  Type        Type;
+typedef enum    TypeKind    TypeKind;
 
 enum TypeKind {
     TYPE_VOID,
@@ -43,19 +43,24 @@ struct EntryHash {
 static Player   rPlayer;
 static Enemy    *gEnemy;
 
+#define HASH_CAPACITY 8
+
 static EntryHash **functions;
 
 static bool player_defined;
 static bool menu_defined;
 
-#define TYPE_DEFINE(var, type_kind, c_type) \
-    Type var = {                            \
+static void function_insert(EntryHash *entry);
+static EntryHash *function_get(const char *name);
+
+#define TYPE_DEFINE(type_kind, c_type) \
+    (Type) {                                \
         .kind = type_kind,                  \
         .size = sizeof(c_type),             \
         .name = #c_type                     \
     }
 
-#define FUNCTION_REGISTER_VOID(index, fn, ret_type) \
+#define FUNCTION_REGISTER_VOID(fn, ret_type) \
     static EntryHash fn##_entry = {                 \
         .name = #fn,                                \
         .function = fn,                             \
@@ -64,9 +69,9 @@ static bool menu_defined;
         .return_type = ret_type,                    \
         .next = NULL                                \
     };                                              \
-    functions[index] = &fn##_entry
+    function_insert(&fn##_entry);
 
-#define FUNCTION_REGISTER(index, fn, ret_type, ...)                \
+#define FUNCTION_REGISTER(fn, ret_type, ...)                \
     static Type fn##_args[] = { __VA_ARGS__ };                     \
     static EntryHash fn##_entry = {                                \
         .name = #fn,                                               \
@@ -76,10 +81,7 @@ static bool menu_defined;
         .return_type = ret_type,                                   \
         .next = NULL                                               \
     };                                                             \
-    functions[index] = &fn##_entry
-
-
-TYPE_DEFINE(TYPE_VOID_T,  TYPE_VOID,  void);
+    function_insert(&fn##_entry);
 
 static void changeName() {
     char player_name[8];
@@ -123,12 +125,12 @@ static void config() {
         return;
     }
 
-    functions = calloc(8, sizeof(EntryHash *));
+    functions = calloc(HASH_CAPACITY, sizeof(EntryHash *));
 
     FUNCTION_REGISTER_VOID(
-        0,
         changeName,
-        TYPE_VOID);
+        TYPE_DEFINE(TYPE_VOID, void)
+    )
 
     menu_defined = true;
 }
@@ -151,4 +153,39 @@ int main(void) {
         cls(5);
     }
     return 0;
+}
+
+
+static size_t hash_string(const char *str) {
+    size_t hash = 5381;
+
+    while (*str) {
+        hash = ((hash << 5) + hash) + (unsigned char)*str;
+        str++;
+    }
+
+    return hash;
+}
+
+static void function_insert(EntryHash *entry) {
+    size_t index = hash_string(entry->name) % HASH_CAPACITY;
+
+    entry->next = functions[index];
+    functions[index] = entry;
+}
+
+static EntryHash *function_get(const char *name) {
+    size_t index = hash_string(name) % HASH_CAPACITY;
+
+    EntryHash *entry = functions[index];
+
+    while (entry != NULL) {
+        if (strcmp(entry->name, name) == 0) {
+            return entry;
+        }
+
+        entry = entry->next;
+    }
+
+    return NULL;
 }
